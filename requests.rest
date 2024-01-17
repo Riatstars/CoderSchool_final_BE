@@ -1,0 +1,34 @@
+
+# POST http://localhost:3000/signin 
+# Content-Type: application/json
+
+# {
+
+#     "email": "rsthanhnam@gmail.com",
+#     "password": "Thanhnam0407"
+# }
+
+# GET  http://localhost:3000/get-upload-url 
+# POST  http://localhost:3000/create-blog
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTI0OTkxNmMxMmY1ZWM3ZWFhNzZkNyIsImlhdCI6MTcwNTQwMDk0OH0.3T3tTq5Cb5x0PIff0p--stQN_BKPRIzKNk-gr85FA0I
+
+# {
+#     "title": "testtitle",
+#     "banner" : "123123",
+#     "des": "this is a des",
+#     "content": {
+#         "blocks": [1,2]
+#     },
+#     "tags": ["tag1", "tag2"]
+
+# }
+
+#"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTI0OTkxNmMxMmY1ZWM3ZWFhNzZkNyIsImlhdCI6MTcwNTQwMDk0OH0.3T3tTq5Cb5x0PIff0p--stQN_BKPRIzKNk-gr85FA0I",
+
+POST  http://localhost:3000/search-users
+Content-Type: application/json
+
+{
+    "query":"riat"
+}
