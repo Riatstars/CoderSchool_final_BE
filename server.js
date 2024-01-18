@@ -271,15 +271,17 @@ server.get("/trending-blogs", (req, res) => {
 });
 
 server.post("/search-blogs", (req, res) => {
-  let { tag, query, page } = req.body;
+  let { tag, query, page, author, limit, eliminate_blog } = req.body;
   let findQuery;
   if (tag) {
-    findQuery = { tags: tag, draft: false };
+    findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
   } else if (query) {
     findQuery = { title: { $regex: query, $options: "i" }, draft: false };
+  } else if (author) {
+    findQuery = { author, draft: false };
   }
 
-  let maxLimit = 5;
+  let maxLimit = limit ? limit : 2;
   Blog.find(findQuery)
     .populate(
       "author",
@@ -302,12 +304,14 @@ server.post("/search-blogs", (req, res) => {
 });
 
 server.post("/search-blogs-count", (req, res) => {
-  let { tag, query } = req.body;
+  let { tag, query, author } = req.body;
   let findQuery;
   if (tag) {
     findQuery = { tags: tag, draft: false };
   } else if (query) {
     findQuery = { title: { $regex: query, $options: "i" }, draft: false };
+  } else if (author) {
+    findQuery = { author, draft: false };
   }
   Blog.countDocuments(findQuery)
     .then((count) => {
@@ -327,6 +331,18 @@ server.post("/search-users", (req, res) => {
     )
     .then((users) => {
       return res.status(200).json({ users });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/get-profile", (req, res) => {
+  let { username } = req.body;
+  User.findOne({ "personal_info.username": username })
+    .select("-personal_info.password -google_auth -updatedAt -blogs")
+    .then((user) => {
+      return res.status(200).json(user);
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });
@@ -398,6 +414,38 @@ server.post("/create-blog", verifyJWT, (req, res) => {
           console.log(incrementVal);
           return res.status(500).json({ error: err });
         });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+});
+
+server.post("/get-blog", (req, res) => {
+  let { blog_id } = req.body;
+  let incrementVal = 1;
+  Blog.findOneAndUpdate(
+    { blog_id },
+    { $inc: { "activity.total_reads": incrementVal } }
+  )
+    .populate(
+      "author",
+      "personal_info.fullname personal_info.username personal_info.profile_img "
+    )
+    .select("title des content banner activity publishedAt blog_id tags")
+    .then((blog) => {
+      User.findOneAndUpdate(
+        {
+          "personal_info.username": blog.author.personal_info.username,
+        },
+        {
+          $inc: {
+            "account_info.total_reads": incrementVal,
+          },
+        }
+      ).catch((err) => {
+        return res.status(500).json({ error: err.message });
+      });
+      return res.status(200).json({ blog });
     })
     .catch((err) => {
       return res.status(500).json({ error: err.message });

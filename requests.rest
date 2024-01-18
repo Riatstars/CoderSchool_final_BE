@@ -26,9 +26,16 @@
 
 #"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTI0OTkxNmMxMmY1ZWM3ZWFhNzZkNyIsImlhdCI6MTcwNTQwMDk0OH0.3T3tTq5Cb5x0PIff0p--stQN_BKPRIzKNk-gr85FA0I",
 
-POST  http://localhost:3000/search-users
+# POST  http://localhost:3000/search-users
+# Content-Type: application/json
+
+# {
+#     "query":"riat"
+# }
+
+POST  http://localhost:3000/get-blog
 Content-Type: application/json
 
 {
-    "query":"riat"
+    "blog_id":"Test-6-Blue-Archive-BGeNNwYV1DSOUPys291T-co"
 }
