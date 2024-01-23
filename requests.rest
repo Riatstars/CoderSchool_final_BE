@@ -8,6 +8,16 @@
 #     "password": "Thanhnam0407"
 # }
 
+
+# POST http://localhost:3000/change-password 
+# Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTI0OTkxNmMxMmY1ZWM3ZWFhNzZkNyIsImlhdCI6MTcwNTgyMDk3NH0.2Zvk0msi1k6dJY3QGxDA3_cVoxdYsAbRzEK7RZ05vmk
+
+# {
+#     "currentPassword": "Hello1",
+#     "newPassword": "Thanhnam0407"
+# }
+
 # GET  http://localhost:3000/get-upload-url 
 # POST  http://localhost:3000/create-blog
 # Content-Type: application/json
@@ -24,7 +34,6 @@
 
 # }
 
-#"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTI0OTkxNmMxMmY1ZWM3ZWFhNzZkNyIsImlhdCI6MTcwNTQwMDk0OH0.3T3tTq5Cb5x0PIff0p--stQN_BKPRIzKNk-gr85FA0I",
 
 # POST  http://localhost:3000/search-users
 # Content-Type: application/json
@@ -33,9 +42,13 @@
 #     "query":"riat"
 # }
 
-POST  http://localhost:3000/get-blog
+POST  http://localhost:3000/user-written-blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTI0OTkxNmMxMmY1ZWM3ZWFhNzZkNyIsImlhdCI6MTcwNTkyNzU1Mn0.l4l6UDmJdW-0tzCDdNMxq5M8gm_sFQ7YuW9JXpgag6o
 Content-Type: application/json
 
 {
-    "blog_id":"Test-6-Blue-Archive-BGeNNwYV1DSOUPys291T-co"
+    "page": 1,
+    "draft": false
+
 }
+
