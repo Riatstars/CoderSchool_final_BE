@@ -10,6 +10,7 @@ import { verifyJWT, getImgUploadUrl } from "./utils/utils.js";
 import userController from "./controller/user.controller.js";
 import commentController from "./controller/comment.controller.js";
 import notificationController from "./controller/notification.controller.js";
+import followController from "./controller/follow.controller.js";
 
 const server = express();
 let PORT = 3000;
@@ -33,6 +34,12 @@ server.post("/google-auth", authController.googleAuth);
 server.post("/change-password", verifyJWT, authController.changePassword);
 
 server.post("/latest-blogs", blogController.latestBlogs);
+server.post(
+  "/latest-blogs-with-auth",
+  verifyJWT,
+  blogController.latestBlogsWithAuth
+);
+
 server.post("/all-latest-blogs-count", blogController.allLatestBlogsCount);
 server.get("/trending-blogs", blogController.trendingBlogs);
 server.post("/search-blogs", blogController.searchBlogs);
@@ -53,6 +60,22 @@ server.post("/get-profile", userController.getProfile);
 server.post("/search-users", userController.searchUsers);
 server.post("/update-profile-img", verifyJWT, userController.updateProfileImg);
 server.post("/update-profile", verifyJWT, userController.updateProfile);
+
+server.post("/check-follow", verifyJWT, followController.checkFollow);
+server.post("/update-follow", verifyJWT, followController.updateFollow);
+server.post("/get-followings", verifyJWT, followController.getFollowings);
+server.post(
+  "/all-followings-count",
+  verifyJWT,
+  followController.allFollowingsCount
+);
+server.post(
+  "/all-followers-count",
+  verifyJWT,
+  followController.allFollowersCount
+);
+
+server.post("/get-followers", verifyJWT, followController.getFollowers);
 
 server.post("/add-comment", verifyJWT, commentController.addComment);
 server.post("/get-blog-comments", commentController.getBlogComments);

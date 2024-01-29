@@ -3,19 +3,23 @@ import Notification from "../Schema/Notification.js";
 import User from "../Schema/User.js";
 import Comment from "../Schema/Comment.js";
 import { nanoid } from "nanoid";
+import Follow from "../Schema/Follow.js";
+import mongoose from "mongoose";
+const ObjectId = mongoose.Types.ObjectId;
 
 const blogController = {};
 
 blogController.latestBlogs = (req, res) => {
   let { page } = req.body;
   let maxLimit = 5;
+
   Blog.find({ draft: false })
     .populate(
       "author",
-      "personal_info.profile_img personal_info.username personal_info.fullname -_id"
+      " personal_info.profile_img personal_info.username personal_info.fullname -_id"
     )
-    .sort({ publishedAt: -1 })
     .select("blog_id title des banner activity tags publishedAt -_id")
+    .sort({ publishedAt: -1 })
     .skip(maxLimit * (page - 1))
     .limit(maxLimit)
     .then((blogs) => {
@@ -24,6 +28,79 @@ blogController.latestBlogs = (req, res) => {
     .catch((err) => {
       return res.status(500).json({ error: err.message });
     });
+};
+blogController.latestBlogsWithAuth = async (req, res) => {
+  try {
+    let user_id = req.user;
+    let { page } = req.body;
+    let maxLimit = 5;
+
+    let aggregate = await Follow.aggregate([
+      { $match: { author: new ObjectId(user_id), status: true } },
+      { $project: { target_user: 1 } },
+      { $sort: { createdAt: -1 } },
+    ]);
+
+    let ObjectIdArr = aggregate.map((item) => {
+      return new ObjectId(item.target_user.toString()); // Use target_user instead of _id
+    });
+
+    if (!aggregate.length) {
+      const blogs = Blog.find({ draft: false })
+        .populate(
+          "author",
+          "personal_info.profile_img personal_info.username personal_info.fullname -_id"
+        )
+        .select("blog_id title des banner activity tags publishedAt -_id")
+        .sort({ publishedAt: -1 })
+        .skip(maxLimit * (page - 1))
+        .limit(maxLimit)
+        .then((blogs) => {
+          return res.status(200).json({ blogs });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: err.message });
+        });
+    } else {
+      const blogs = Blog.find({
+        draft: false,
+        author: { $in: ObjectIdArr },
+      })
+        .populate(
+          "author",
+          "personal_info.profile_img personal_info.username personal_info.fullname -_id"
+        )
+        .select("blog_id title des banner activity tags publishedAt -_id")
+        .sort({ publishedAt: -1 })
+        .then((blogsIn) => {
+          const blogs = Blog.find({
+            draft: false,
+            author: { $nin: ObjectIdArr },
+          })
+            .populate(
+              "author",
+              "personal_info.profile_img personal_info.username personal_info.fullname -_id"
+            )
+            .select("blog_id title des banner activity tags publishedAt -_id")
+            .sort({ publishedAt: -1 })
+            .then((blogsNin) => {
+              blogsNin.forEach((item) => blogsIn.push(item));
+              const blogs = blogsIn.slice(
+                maxLimit * (page - 1),
+                maxLimit * page
+              );
+              return res.status(200).json({
+                blogs,
+              });
+            });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: err.message });
+        });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
 blogController.allLatestBlogsCount = (req, res) => {
   Blog.countDocuments({ draft: false })
