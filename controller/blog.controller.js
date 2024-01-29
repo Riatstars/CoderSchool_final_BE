@@ -393,6 +393,41 @@ blogController.userWrittenBlogsCount = (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 };
+blogController.likedBlogs = (req, res) => {
+  let user_id = req.user;
+  let { page } = req.body;
+  let maxLimit = 5;
+  let skipDocs = (page - 1) * maxLimit;
+
+  Notification.find({ user: user_id, type: "like" })
+    .select("blog -_id")
+    .populate({
+      path: "blog",
+      select: "title banner author publishedAt blog_id des activity -_id",
+      populate: { path: "author", select: "personal_info -_id" },
+    })
+    .skip(skipDocs)
+    .limit(maxLimit)
+    .sort({ createdAt: -1 })
+    .then((blogs) => {
+      blogs = blogs.map((blog) => blog.blog);
+      return res.status(200).json({ blogs });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+};
+
+blogController.likedBlogsCount = (req, res) => {
+  let user_id = req.user;
+  Notification.countDocuments({ user: user_id, type: "like" })
+    .then((count) => {
+      return res.status(200).json({ totalDocs: count });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message });
+    });
+};
 blogController.deleteBlog = (req, res) => {
   let user_id = req.user;
   let isAdmin = req.admin;

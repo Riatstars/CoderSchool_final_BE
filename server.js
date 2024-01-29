@@ -54,6 +54,9 @@ server.post(
   verifyJWT,
   blogController.userWrittenBlogsCount
 );
+server.post("/liked-blogs", verifyJWT, blogController.likedBlogs);
+server.post("/liked-blogs-count", verifyJWT, blogController.likedBlogsCount);
+
 server.post("/delete-blog", verifyJWT, blogController.deleteBlog);
 
 server.post("/get-profile", userController.getProfile);
