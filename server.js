@@ -81,6 +81,7 @@ server.post(
 server.post("/get-followers", verifyJWT, followController.getFollowers);
 
 server.post("/add-comment", verifyJWT, commentController.addComment);
+server.post("/edit-comment", verifyJWT, commentController.editComment);
 server.post("/get-blog-comments", commentController.getBlogComments);
 server.post("/get-replies", commentController.getReplies);
 server.post("/delete-comment", verifyJWT, commentController.deleteComment);

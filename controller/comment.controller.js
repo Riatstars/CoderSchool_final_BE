@@ -111,6 +111,35 @@ commentController.addComment = (req, res) => {
     });
   });
 };
+
+commentController.editComment = (req, res) => {
+  let user_id = req.user;
+  let { _id, comment: commentContent } = req.body;
+  if (!commentContent.length) {
+    return res.status(402).json({ error: "Write something to edit a comment" });
+  }
+
+  let edditingComment = Comment.findOne({ _id })
+    .then((comment) => {
+      if (!comment.commented_by == user_id) {
+        return res.status(402).json({
+          error: "You must be the comment author to edit this comment",
+        });
+      }
+      let { commentedAt, children } = comment;
+      comment.comment = commentContent;
+      comment.save().then((comment) => console.log("comment edited"));
+      return res.status(200).json({
+        comment: comment.comment,
+        commentedAt,
+        _id: comment._id,
+        user_id,
+        children,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
 commentController.getBlogComments = (req, res) => {
   let { blog_id, skip } = req.body;
   let maxLimit = 5;
