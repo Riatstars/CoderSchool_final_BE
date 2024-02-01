@@ -71,7 +71,7 @@ commentController.addComment = (req, res) => {
         $push: { comments: commentFile._id },
         $inc: {
           "activity.total_comments": 1,
-          "activity.total_parent_comments": replying_to ? 0 : 1,
+          "activity.total_parent_comment s": replying_to ? 0 : 1,
         },
       }
     ).then((blog) => {

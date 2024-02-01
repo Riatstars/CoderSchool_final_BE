@@ -92,7 +92,10 @@ followController.getFollowings = (req, res) => {
 };
 
 followController.allFollowingsCount = (req, res) => {
-  const user_id = req.user;
+  let user_id = req.user;
+  if (req.body.user_id) {
+    user_id = req.body.user_id;
+  }
   Follow.countDocuments({ author: user_id, status: true })
     .then((count) => {
       return res.status(200).json({ totalDocs: count });
@@ -119,7 +122,10 @@ followController.getFollowers = (req, res) => {
 };
 
 followController.allFollowersCount = (req, res) => {
-  const user_id = req.user;
+  let user_id = req.user;
+  if (req.body.user_id) {
+    user_id = req.body.user_id;
+  }
   Follow.countDocuments({ target_user: user_id, status: true })
     .then((count) => {
       return res.status(200).json({ totalDocs: count });

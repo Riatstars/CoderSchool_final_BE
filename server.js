@@ -39,13 +39,12 @@ server.post(
   verifyJWT,
   blogController.latestBlogsWithAuth
 );
-
 server.post("/all-latest-blogs-count", blogController.allLatestBlogsCount);
 server.get("/trending-blogs", blogController.trendingBlogs);
 server.post("/search-blogs", blogController.searchBlogs);
 server.post("/search-blogs-count", blogController.searchBlogsCount);
-server.post("/create-blog", verifyJWT, blogController.createBlog);
 server.post("/get-blog", blogController.getBlog);
+server.post("/create-blog", verifyJWT, blogController.createBlog);
 server.post("/like-blog", verifyJWT, blogController.likeBlog);
 server.post("/isliked-by-user", verifyJWT, blogController.isLikedByUser);
 server.post("/user-written-blogs", verifyJWT, blogController.userWrittenBlogs);
@@ -56,7 +55,6 @@ server.post(
 );
 server.post("/liked-blogs", verifyJWT, blogController.likedBlogs);
 server.post("/liked-blogs-count", verifyJWT, blogController.likedBlogsCount);
-
 server.post("/delete-blog", verifyJWT, blogController.deleteBlog);
 
 server.post("/get-profile", userController.getProfile);
@@ -72,13 +70,12 @@ server.post(
   verifyJWT,
   followController.allFollowingsCount
 );
+server.post("/get-followers", verifyJWT, followController.getFollowers);
 server.post(
   "/all-followers-count",
   verifyJWT,
   followController.allFollowersCount
 );
-
-server.post("/get-followers", verifyJWT, followController.getFollowers);
 
 server.post("/add-comment", verifyJWT, commentController.addComment);
 server.post("/edit-comment", verifyJWT, commentController.editComment);

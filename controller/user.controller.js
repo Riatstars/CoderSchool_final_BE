@@ -1,11 +1,13 @@
+import Follow from "../Schema/Follow.js";
 import User from "../Schema/User.js";
 
 const userController = {};
 
 userController.getProfile = (req, res) => {
   let { username } = req.body;
+
   User.findOne({ "personal_info.username": username })
-    .select("-personal_info.password -google_auth -updatedAt -blogs")
+    .select("-personal_info.password -google_auth -updatedAt -blogs _id")
     .then((user) => {
       return res.status(200).json(user);
     })
