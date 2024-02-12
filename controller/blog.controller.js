@@ -216,14 +216,19 @@ blogController.createBlog = (req, res) => {
         blog_id,
         draft: Boolean(draft),
       });
-      let incrementVal = Boolean(draft) ? 0 : 1;
+
       blog
         .save()
-        .then((blog) => {
+        .then(async (blog) => {
+          const blogsCount = await Blog.count({
+            draft: false,
+            author: authorId,
+          });
+
           User.findOneAndUpdate(
             { _id: authorId },
             {
-              $inc: { "account_info.total_posts": incrementVal },
+              "account_info.total_posts": blogsCount,
               $push: { blogs: blog._id },
             }
           )
@@ -231,7 +236,6 @@ blogController.createBlog = (req, res) => {
               return res.status(200).json({ id: blog.blog_id });
             })
             .catch((err) => {
-              console.log(incrementVal);
               return res.status(500).json({ error: err });
             });
         })
@@ -409,18 +413,22 @@ blogController.deleteBlog = (req, res) => {
 
   if (isAdmin) {
     Blog.findOneAndDelete({ blog_id })
-      .then((blog) => {
+      .then(async (blog) => {
         Notification.deleteMany({ blog: blog._id }).then((data) =>
           console.log("notification deleted")
         );
         Comment.deleteMany({ blog_id: blog._id }).then((data) =>
           console.log("comments deleted")
         );
+        const blogsCount = await Blog.count({
+          draft: false,
+          author: user_id,
+        });
         User.findOneAndUpdate(
           { _id: user_id },
           {
             $pull: { blog: blog._id },
-            $inc: { "account_info.total_posts": -1 },
+            "account_info.total_posts": blogsCount,
           }
         ).then((data) => console.log("comments deleted"));
         return res.status(200).json({ status: "done" });

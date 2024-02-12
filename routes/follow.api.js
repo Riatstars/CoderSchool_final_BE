@@ -7,16 +7,8 @@ const followApi = express.Router();
 followApi.post("/check-follow", verifyJWT, followController.checkFollow);
 followApi.post("/update-follow", verifyJWT, followController.updateFollow);
 followApi.post("/get-followings", verifyJWT, followController.getFollowings);
-followApi.post(
-  "/all-followings-count",
-  verifyJWT,
-  followController.allFollowingsCount
-);
+followApi.post("/all-followings-count", followController.allFollowingsCount);
 followApi.post("/get-followers", verifyJWT, followController.getFollowers);
-followApi.post(
-  "/all-followers-count",
-  verifyJWT,
-  followController.allFollowersCount
-);
+followApi.post("/all-followers-count", followController.allFollowersCount);
 
 export { followApi };

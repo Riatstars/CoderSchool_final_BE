@@ -1,4 +1,4 @@
-import Follow from "../Schema/Follow.js";
+import Blog from "../Schema/Blog.js";
 import User from "../Schema/User.js";
 
 const userController = {};
@@ -7,7 +7,9 @@ userController.getProfile = (req, res) => {
   let { username } = req.body;
   User.findOne({ "personal_info.username": username })
     .select("-personal_info.password -google_auth -updatedAt -blogs _id")
-    .then((user) => {
+    .then(async (user) => {
+      const blogsCount = await Blog.count({ draft: false, author: user._id });
+      user.account_info.total_posts = blogsCount;
       return res.status(200).json(user);
     })
     .catch((err) => {
