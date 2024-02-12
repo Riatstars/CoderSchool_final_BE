@@ -1,6 +1,7 @@
 import express from "express";
 import blogController from "../controller/blog.controller.js";
 import { verifyJWT } from "../utils/utils.js";
+import blogValidator from "../validator/blog.validator.js";
 
 const blogApi = express.Router();
 
@@ -15,7 +16,12 @@ blogApi.get("/trending-blogs", blogController.trendingBlogs);
 blogApi.post("/search-blogs", blogController.searchBlogs);
 blogApi.post("/search-blogs-count", blogController.searchBlogsCount);
 blogApi.post("/get-blog", blogController.getBlog);
-blogApi.post("/create-blog", verifyJWT, blogController.createBlog);
+blogApi.post(
+  "/create-blog",
+  verifyJWT,
+  blogValidator.createBlog,
+  blogController.createBlog
+);
 blogApi.post("/like-blog", verifyJWT, blogController.likeBlog);
 blogApi.post("/isliked-by-user", verifyJWT, blogController.isLikedByUser);
 blogApi.post("/user-written-blogs", verifyJWT, blogController.userWrittenBlogs);

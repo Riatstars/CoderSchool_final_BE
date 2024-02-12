@@ -35,7 +35,6 @@ followController.checkFollow = (req, res) => {
     })
     .catch((err) => res.status(500).json({ error: err.message }));
 };
-
 followController.updateFollow = (req, res) => {
   const user_id = req.user;
   const targetUserId = req.body.target;
@@ -75,7 +74,6 @@ followController.updateFollow = (req, res) => {
     })
     .catch((err) => res.status(500).json({ error: err.message }));
 };
-
 followController.getFollowings = (req, res) => {
   let { page } = req.body;
   let maxLimit = 5;
@@ -90,7 +88,6 @@ followController.getFollowings = (req, res) => {
     })
     .catch((err) => res.status(500).json({ error: err.message }));
 };
-
 followController.allFollowingsCount = (req, res) => {
   let user_id = req.user;
   if (req.body.user_id) {
@@ -105,7 +102,6 @@ followController.allFollowingsCount = (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 };
-
 followController.getFollowers = (req, res) => {
   let { page } = req.body;
   let maxLimit = 5;
@@ -120,7 +116,6 @@ followController.getFollowers = (req, res) => {
     })
     .catch((err) => res.status(500).json({ error: err.message }));
 };
-
 followController.allFollowersCount = (req, res) => {
   let user_id = req.user;
   if (req.body.user_id) {

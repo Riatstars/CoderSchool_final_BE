@@ -5,7 +5,6 @@ const userController = {};
 
 userController.getProfile = (req, res) => {
   let { username } = req.body;
-
   User.findOne({ "personal_info.username": username })
     .select("-personal_info.password -google_auth -updatedAt -blogs _id")
     .then((user) => {

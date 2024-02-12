@@ -12,20 +12,6 @@ const authController = {};
 
 authController.signUp = (req, res) => {
   let { fullname, email, password } = req.body;
-  if (fullname.length < 3) {
-    return res
-      .status(403)
-      .json({ Error: "Fullname must be at least 3 letters long" });
-  }
-  if (!email.length || !emailRegex.test(email)) {
-    return res.status(403).json({ Error: "Please provide email" });
-  }
-  if (!passwordRegex.test(password)) {
-    return res.status(403).json({
-      Error:
-        "Password must be 6 to 20 characters long with a numeric, 1 lowercase and 1 uppercase letters",
-    });
-  }
   bcrypt.hash(password, 10, async (err, hashed_password) => {
     let username = await generateUsername(email);
     let user = new User({
@@ -42,7 +28,6 @@ authController.signUp = (req, res) => {
       });
   });
 };
-
 authController.signIn = (req, res) => {
   let { email, password } = req.body;
   User.findOne({ "personal_info.email": email })
@@ -73,7 +58,6 @@ authController.signIn = (req, res) => {
       return res.status(500).json({ error: err.message });
     });
 };
-
 authController.googleAuth = async (req, res) => {
   let { access_token } = req.body;
   getAuth()
@@ -126,18 +110,8 @@ authController.googleAuth = async (req, res) => {
       })
     );
 };
-
 authController.changePassword = (req, res) => {
   let { currentPassword, newPassword } = req.body;
-  if (
-    !passwordRegex.test(currentPassword) ||
-    !passwordRegex.test(newPassword)
-  ) {
-    return res.status(403).json({
-      error:
-        "Password must be 6 to 20 characters long with a numeric, 1 lowercase and 1 uppercase letters",
-    });
-  }
   User.findOne({ _id: req.user })
     .then((user) => {
       if (user.google_auth) {

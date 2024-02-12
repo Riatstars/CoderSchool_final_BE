@@ -41,17 +41,10 @@ const deleteComment = (_id) => {
       .catch((err) => console.log(err.message));
   });
 };
-
 const commentController = {};
-
 commentController.addComment = (req, res) => {
   let user_id = req.user;
   let { _id, comment, blog_author, replying_to, notification_id } = req.body;
-  if (!comment.length) {
-    return res
-      .status(402)
-      .json({ error: "Write something to leave a comment" });
-  }
   let commentObj = {
     blog_id: _id,
     blog_author,
@@ -75,7 +68,7 @@ commentController.addComment = (req, res) => {
         },
       }
     ).then((blog) => {
-      console.log("New comment creeated");
+      console.log("New comment created");
     });
     let notificationObj = {
       type: replying_to ? "reply" : "comment",
@@ -111,7 +104,6 @@ commentController.addComment = (req, res) => {
     });
   });
 };
-
 commentController.editComment = (req, res) => {
   let user_id = req.user;
   let { _id, comment: commentContent } = req.body;
@@ -139,7 +131,6 @@ commentController.editComment = (req, res) => {
     })
     .catch((err) => console.log(err));
 };
-
 commentController.getBlogComments = (req, res) => {
   let { blog_id, skip } = req.body;
   let maxLimit = 5;
