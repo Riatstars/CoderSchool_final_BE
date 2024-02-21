@@ -11,7 +11,7 @@ const s3 = new aws.S3({
 });
 const generateUploadURL = async () => {
   const date = new Date();
-  const imageName = `${nanoid()}-${date.getTime}.jpeg`;
+  const imageName = `${nanoid()}-${date.getTime()}.jpeg`;
   return await s3.getSignedUrlPromise("putObject", {
     Bucket: "blogging-website-tnam",
     Key: imageName,
