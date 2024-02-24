@@ -12,7 +12,7 @@ authApi.post(
   authValidator.googleAuth,
   authController.googleAuth
 );
-authApi.post(
+authApi.put(
   "/change-password",
   verifyJWT,
   authValidator.changePassword,

@@ -1,7 +1,7 @@
 const userValidator = {};
 
 userValidator.getProfile = (req, res, next) => {
-  let { username } = req.body;
+  let { username } = req.query;
   if (!username) {
     return res.status(402).json({ error: "Please provide username" });
   }
@@ -9,7 +9,7 @@ userValidator.getProfile = (req, res, next) => {
 };
 
 userValidator.searchUsers = (req, res, next) => {
-  let { query } = req.body;
+  let { query } = req.query;
   if (!query) {
     return res.status(402).json({ error: "Please provide search query" });
   }
@@ -21,9 +21,11 @@ userValidator.updateProfileImg = (req, res, next) => {
   if (!url) {
     return res.status(402).json({ error: "Please provide url" });
   }
+  next();
 };
 
 userValidator.updateProfile = (req, res, next) => {
+  let bioLimit = 150;
   let { username, bio } = req.body;
   if (username.length < 3) {
     return res.status(403).json({ error: "Username should be longer than 3." });

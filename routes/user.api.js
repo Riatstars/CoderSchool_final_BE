@@ -5,23 +5,23 @@ import userValidator from "../validator/user.validator.js";
 
 const userApi = express.Router();
 
-userApi.post(
+userApi.get(
   "/get-profile",
   userValidator.getProfile,
   userController.getProfile
 );
-userApi.post(
+userApi.get(
   "/search-users",
   userValidator.searchUsers,
   userController.searchUsers
 );
-userApi.post(
+userApi.put(
   "/update-profile-img",
   verifyJWT,
   userValidator.updateProfileImg,
   userController.updateProfileImg
 );
-userApi.post(
+userApi.put(
   "/update-profile",
   verifyJWT,
   userValidator.updateProfile,

@@ -11,9 +11,13 @@ commentApi.post(
   commentValidator.addComment,
   commentController.addComment
 );
-commentApi.post("/edit-comment", verifyJWT, commentController.editComment);
-commentApi.post("/get-blog-comments", commentController.getBlogComments);
-commentApi.post("/get-replies", commentController.getReplies);
-commentApi.post("/delete-comment", verifyJWT, commentController.deleteComment);
+commentApi.put("/edit-comment", verifyJWT, commentController.editComment);
+commentApi.get("/get-blog-comments", commentController.getBlogComments);
+commentApi.get("/get-replies", commentController.getReplies);
+commentApi.delete(
+  "/delete-comment/:comment_id",
+  verifyJWT,
+  commentController.deleteComment
+);
 
 export { commentApi };

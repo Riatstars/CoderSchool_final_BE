@@ -132,7 +132,7 @@ commentController.editComment = (req, res) => {
     .catch((err) => console.log(err));
 };
 commentController.getBlogComments = (req, res) => {
-  let { blog_id, skip } = req.body;
+  let { blog_id, skip } = req.query;
   let maxLimit = 5;
   Comment.find({ blog_id, isReply: false })
     .populate(
@@ -150,7 +150,7 @@ commentController.getBlogComments = (req, res) => {
     });
 };
 commentController.getReplies = (req, res) => {
-  let { _id, skip } = req.body;
+  let { _id, skip } = req.query;
   let maxLimit = 5;
   Comment.findOne({ _id })
     .populate({
@@ -172,7 +172,7 @@ commentController.getReplies = (req, res) => {
     });
 };
 commentController.deleteComment = (req, res) => {
-  let { _id } = req.body;
+  let { comment_id: _id } = req.params;
   let user_id = req.user;
   Comment.findOne({ _id })
     .then((comment) => {

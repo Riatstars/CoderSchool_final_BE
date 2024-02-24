@@ -4,7 +4,7 @@ import User from "../Schema/User.js";
 const userController = {};
 
 userController.getProfile = (req, res) => {
-  let { username } = req.body;
+  let { username } = req.query;
   User.findOne({ "personal_info.username": username })
     .select("-personal_info.password -google_auth -updatedAt -blogs _id")
     .then(async (user) => {
@@ -17,7 +17,7 @@ userController.getProfile = (req, res) => {
     });
 };
 userController.searchUsers = (req, res) => {
-  let { query } = req.body;
+  let { query } = req.query;
   User.find({ "personal_info.username": { $regex: query, $options: "i" } })
     .limit(50)
     .select(
@@ -34,6 +34,7 @@ userController.updateProfileImg = (req, res) => {
   let { url } = req.body;
   User.findOneAndUpdate({ _id: req.user }, { "personal_info.profile_img": url })
     .then(() => {
+      console.log(url);
       return res.status(200).json({ profile_img: url });
     })
     .catch((err) => {
