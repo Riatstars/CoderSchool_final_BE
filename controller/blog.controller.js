@@ -10,7 +10,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const blogController = {};
 
 blogController.latestBlogs = (req, res) => {
-  let { page } = req.body;
+  let { page } = req.query;
   let maxLimit = 5;
 
   Blog.find({ draft: false })
@@ -32,7 +32,7 @@ blogController.latestBlogs = (req, res) => {
 blogController.latestBlogsWithAuth = async (req, res) => {
   try {
     let user_id = req.user;
-    let { page } = req.body;
+    let { page } = req.query;
     let maxLimit = 5;
 
     let aggregate = await Follow.aggregate([
@@ -134,7 +134,7 @@ blogController.trendingBlogs = (req, res) => {
     });
 };
 blogController.searchBlogs = (req, res) => {
-  let { tag, query, page, author, limit, eliminate_blog } = req.body;
+  let { tag, query, page, author, limit, eliminate_blog } = req.query;
   let findQuery;
   if (tag) {
     findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
@@ -165,7 +165,7 @@ blogController.searchBlogs = (req, res) => {
     });
 };
 blogController.searchBlogsCount = (req, res) => {
-  let { tag, query, author } = req.body;
+  let { tag, query, author } = req.query;
   let findQuery;
   if (tag) {
     findQuery = { tags: tag, draft: false };
@@ -248,7 +248,8 @@ blogController.createBlog = (req, res) => {
   }
 };
 blogController.getBlog = (req, res) => {
-  let { blog_id, draft, mode } = req.body;
+  let { blog_id } = req.params;
+  let { draft, mode } = req.body;
   let incrementVal = mode !== "edit" ? 1 : 0;
   Blog.findOneAndUpdate(
     { blog_id },
@@ -321,8 +322,8 @@ blogController.likeBlog = (req, res) => {
 };
 blogController.isLikedByUser = (req, res) => {
   let user_id = req.user;
-  let { _id } = req.body;
-  Notification.exists({ user: user_id, type: "like", blog: _id })
+  let { blog_id } = req.params;
+  Notification.exists({ user: user_id, type: "like", blog: blog_id })
     .then((result) => {
       return res.status(200).json({ result });
     })
@@ -332,7 +333,7 @@ blogController.isLikedByUser = (req, res) => {
 };
 blogController.userWrittenBlogs = (req, res) => {
   let user_id = req.user;
-  let { page, draft, query, deletedDocCount } = req.body;
+  let { page, draft, query, deletedDocCount } = req.query;
   let maxLimit = 5;
   let skipDocs = (page - 1) * maxLimit;
   if (deletedDocCount) {
@@ -359,7 +360,7 @@ blogController.userWrittenBlogs = (req, res) => {
 };
 blogController.userWrittenBlogsCount = (req, res) => {
   let user_id = req.user;
-  let { draft, query } = req.body;
+  let { draft, query } = req.query;
   Blog.countDocuments({
     author: user_id,
     draft,
@@ -374,7 +375,7 @@ blogController.userWrittenBlogsCount = (req, res) => {
 };
 blogController.likedBlogs = (req, res) => {
   let user_id = req.user;
-  let { page } = req.body;
+  let { page } = req.query;
   let maxLimit = 5;
   let skipDocs = (page - 1) * maxLimit;
 
@@ -409,7 +410,7 @@ blogController.likedBlogsCount = (req, res) => {
 blogController.deleteBlog = (req, res) => {
   let user_id = req.user;
   let isAdmin = req.admin;
-  let { blog_id } = req.body;
+  let { blog_id } = req.params;
 
   if (isAdmin) {
     Blog.findOneAndDelete({ blog_id })

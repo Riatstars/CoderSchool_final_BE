@@ -5,17 +5,17 @@ import blogValidator from "../validator/blog.validator.js";
 
 const blogApi = express.Router();
 
-blogApi.post("/latest-blogs", blogController.latestBlogs);
-blogApi.post(
+blogApi.get("/latest-blogs", blogController.latestBlogs);
+blogApi.get(
   "/latest-blogs-with-auth",
   verifyJWT,
   blogController.latestBlogsWithAuth
 );
-blogApi.post("/all-latest-blogs-count", blogController.allLatestBlogsCount);
+blogApi.get("/all-latest-blogs-count", blogController.allLatestBlogsCount);
 blogApi.get("/trending-blogs", blogController.trendingBlogs);
-blogApi.post("/search-blogs", blogController.searchBlogs);
-blogApi.post("/search-blogs-count", blogController.searchBlogsCount);
-blogApi.post("/get-blog", blogController.getBlog);
+blogApi.get("/search-blogs", blogController.searchBlogs);
+blogApi.get("/search-blogs-count", blogController.searchBlogsCount);
+blogApi.get("/get-blog/:blog_id", blogController.getBlog);
 blogApi.post(
   "/create-blog",
   verifyJWT,
@@ -23,15 +23,19 @@ blogApi.post(
   blogController.createBlog
 );
 blogApi.post("/like-blog", verifyJWT, blogController.likeBlog);
-blogApi.post("/isliked-by-user", verifyJWT, blogController.isLikedByUser);
-blogApi.post("/user-written-blogs", verifyJWT, blogController.userWrittenBlogs);
-blogApi.post(
+blogApi.get(
+  "/isliked-by-user/:blog_id",
+  verifyJWT,
+  blogController.isLikedByUser
+);
+blogApi.get("/user-written-blogs", verifyJWT, blogController.userWrittenBlogs);
+blogApi.get(
   "/user-written-blogs-count",
   verifyJWT,
   blogController.userWrittenBlogsCount
 );
-blogApi.post("/liked-blogs", verifyJWT, blogController.likedBlogs);
-blogApi.post("/liked-blogs-count", verifyJWT, blogController.likedBlogsCount);
-blogApi.post("/delete-blog", verifyJWT, blogController.deleteBlog);
+blogApi.get("/liked-blogs", verifyJWT, blogController.likedBlogs);
+blogApi.get("/liked-blogs-count", verifyJWT, blogController.likedBlogsCount);
+blogApi.delete("/delete-blog/:blog_id", verifyJWT, blogController.deleteBlog);
 
 export { blogApi };

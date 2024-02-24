@@ -75,7 +75,7 @@ followController.updateFollow = (req, res) => {
     .catch((err) => res.status(500).json({ error: err.message }));
 };
 followController.getFollowings = (req, res) => {
-  let { page } = req.body;
+  let { page } = req.query;
   let maxLimit = 5;
   const user_id = req.user;
   Follow.find({ author: user_id, status: true })
@@ -89,9 +89,11 @@ followController.getFollowings = (req, res) => {
     .catch((err) => res.status(500).json({ error: err.message }));
 };
 followController.allFollowingsCount = (req, res) => {
-  let user_id = req.user;
-  if (req.body.user_id) {
-    user_id = req.body.user_id;
+  let user_id;
+  if (req.params.user_id) {
+    user_id = req.params.user_id;
+  } else {
+    user_id = req.user;
   }
   Follow.countDocuments({ author: user_id, status: true })
     .then((count) => {
@@ -103,7 +105,7 @@ followController.allFollowingsCount = (req, res) => {
     });
 };
 followController.getFollowers = (req, res) => {
-  let { page } = req.body;
+  let { page } = req.query;
   let maxLimit = 5;
   const user_id = req.user;
   Follow.find({ target_user: user_id, status: true })
@@ -117,11 +119,14 @@ followController.getFollowers = (req, res) => {
     .catch((err) => res.status(500).json({ error: err.message }));
 };
 followController.allFollowersCount = (req, res) => {
-  let user_id = req.user;
-  if (req.body.user_id) {
-    user_id = req.body.user_id;
+  let user_id;
+  if (req.params.user_id) {
+    user_id = req.params.user_id;
+  } else {
+    user_id = req.user;
   }
-  Follow.countDocuments({ target_user: user_id, status: true })
+
+  user_id = Follow.countDocuments({ target_user: user_id, status: true })
     .then((count) => {
       return res.status(200).json({ totalDocs: count });
     })

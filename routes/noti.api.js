@@ -9,12 +9,12 @@ notiApi.get(
   verifyJWT,
   notificationController.newNotificationAvai
 );
-notiApi.post(
+notiApi.get(
   "/notifications",
   verifyJWT,
   notificationController.getNotifications
 );
-notiApi.post(
+notiApi.get(
   "/all-notifications-count",
   notificationController.allNotificationsCount
 );

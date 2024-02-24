@@ -22,7 +22,7 @@ notificationController.newNotificationAvai = (req, res) => {
 };
 notificationController.getNotifications = (req, res) => {
   let user_id = req.user;
-  let { page, filter, deletedDocCount } = req.body;
+  let { page, filter, deletedDocCount } = req.query;
 
   let maxLimit = 10;
   let findQuery = {
